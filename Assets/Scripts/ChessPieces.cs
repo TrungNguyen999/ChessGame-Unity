@@ -90,8 +90,11 @@ public class ChessPieces : MonoBehaviour
 
     private void OnMouseUp()
     {
-        DestroyedMovePlate();
-        InitMovePlate();
+        if (!controller.GetComponent<GameController>().IsGameOver() && controller.GetComponent<GameController>().GetCurrentPlayer() == playerType)
+        {
+            DestroyedMovePlate();
+            InitMovePlate();
+        }
     }
 
     public void DestroyedMovePlate()
@@ -108,32 +111,32 @@ public class ChessPieces : MonoBehaviour
         {
             case "black_queen":
             case "white_queen":
-                lineMovePlate(1, 0);
-                lineMovePlate(0, 1);
-                lineMovePlate(1, 1);
-                lineMovePlate(-1, 0);
-                lineMovePlate(1, 1);
-                lineMovePlate(-1, -1);
-                lineMovePlate(-1, 1);
-                lineMovePlate(1, -1);
+                LineMovePlate(1, 0);
+                LineMovePlate(0, 1);
+                LineMovePlate(1, 1);
+                LineMovePlate(-1, 0);
+                LineMovePlate(0, -1);
+                LineMovePlate(-1, -1);
+                LineMovePlate(-1, 1);
+                LineMovePlate(1, -1);
                 break;
             case "black_knight":
             case "white_knight":
-                lMovePlate();
+                LMovePlate();
                 break;
             case "black_bishop":
             case "white_bishop":
-                lineMovePlate(1, 1);
-                lineMovePlate(-1, -1);
-                lineMovePlate(-1, 1);
-                lineMovePlate(1, -1);
+                LineMovePlate(1, 1);
+                LineMovePlate(-1, -1);
+                LineMovePlate(-1, 1);
+                LineMovePlate(1, -1);
                 break;
             case "black_rook":
             case "white_rook":
-                lineMovePlate(0, 1);
-                lineMovePlate(1, 0);
-                lineMovePlate(-1, 0);
-                lineMovePlate(0, -1);
+                LineMovePlate(0, 1);
+                LineMovePlate(1, 0);
+                LineMovePlate(-1, 0);
+                LineMovePlate(0, -1);
                 break;
             case "black_king":
             case "white_king":
@@ -166,7 +169,7 @@ public class ChessPieces : MonoBehaviour
         }
     }
 
-    public void lineMovePlate(int xDirection, int yDirection)
+    public void LineMovePlate(int xDirection, int yDirection)
     {
         GameController sc = controller.GetComponent<GameController>();
 
@@ -185,7 +188,7 @@ public class ChessPieces : MonoBehaviour
         }
     }
 
-    public void lMovePlate()
+    public void LMovePlate()
     {
         PointMovePlate(xBoard + 1, yBoard + 2);
         PointMovePlate(xBoard - 1, yBoard + 2);
@@ -261,7 +264,7 @@ public class ChessPieces : MonoBehaviour
         x += -2.3f;
         y += -2.3f;
 
-        GameObject map = Instantiate(MovePlate, new Vector3(x, y, -1), Quaternion.identity);
+        GameObject map = Instantiate(MovePlate, new Vector3(x, y, -3.0f), Quaternion.identity);
 
         ChessMechanics mapScript = map.GetComponent<ChessMechanics>();
         mapScript.SetReference(gameObject);
@@ -279,7 +282,7 @@ public class ChessPieces : MonoBehaviour
         x += -2.3f;
         y += -2.3f;
 
-        GameObject map = Instantiate(MovePlate, new Vector3(x, y, -1), Quaternion.identity);
+        GameObject map = Instantiate(MovePlate, new Vector3(x, y, -3.0f), Quaternion.identity);
 
         ChessMechanics mapScript = map.GetComponent<ChessMechanics>();
         mapScript.attack = true;

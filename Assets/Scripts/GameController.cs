@@ -2,16 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using TMPro;
 
 public class GameController : MonoBehaviour
 {
     public GameObject chessPiece;
     // Map positions
-    private GameObject[,] positionOnBoard = new GameObject[8,8];
+    private readonly GameObject[,] positionOnBoard = new GameObject[8,8];
     // player chess pieces amount
     private GameObject[] playerBlack = new GameObject[16];
     private GameObject[] playerWhite = new GameObject[16];
+
+    [SerializeField] private TMP_Text whiteSideText;
+    [SerializeField] private TMP_Text blackSideText;
+    [SerializeField] GameObject RestartBtn;
 
     private string currPlayer = "white";
     private bool isGameOver = false;
@@ -19,6 +25,7 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         //// Using Instantiate() to create a gameObject when start the game 
         //Instantiate(chessPiece, new Vector3(0,0,-1), Quaternion.identity);
         playerWhite = new GameObject[]
@@ -61,16 +68,18 @@ public class GameController : MonoBehaviour
         cp.Activate();
         return obj;
     }
-
+    // Set the position of the piece after move is null
     public void SetPositionEmpty(int x, int y)
     {
         positionOnBoard[x, y] = null;
     }
 
+    // Get the position base of the board
     public GameObject GetPosition(int x, int y)
     {
         return positionOnBoard[x, y];
     }
+
     public bool PositionOnBoard(int x, int y)
     {
         if (x < 0 || y < 0 || x >= positionOnBoard.GetLength(0) || y >= positionOnBoard.GetLength(1))
@@ -80,4 +89,57 @@ public class GameController : MonoBehaviour
         return true;
     }
 
+    public string GetCurrentPlayer()
+    {
+        return currPlayer;
+    }
+
+    public void NextTurn()
+    {
+        if (currPlayer == "white")
+        {
+            currPlayer = "black";
+        }
+        else
+        {
+            currPlayer = "white";
+        }
+    }
+
+    public bool IsGameOver()
+    {
+        return isGameOver;
+    }
+
+    private void Update()
+    {
+        if (IsGameOver() && Input.GetMouseButtonDown(0))
+        {
+            isGameOver = false;
+            SceneManager.LoadScene("Game");
+        }
+    }
+
+    public void Winner(string playerWin, string playerLose)
+    {
+        isGameOver = true;
+        string winMessage = $"{playerWin} is the winner!!!";
+        string loseMessage = $"{playerLose} is the loser!!!";
+
+
+        whiteSideText.enabled = true;
+        blackSideText.enabled = true;
+
+        if (playerWin == "white")
+        {
+            whiteSideText.text = winMessage;
+            blackSideText.text = loseMessage;
+        }
+        if (playerWin == "black")
+        {
+            whiteSideText.text = loseMessage;
+            blackSideText.text = winMessage;
+        }
+        RestartBtn.SetActive(true);
+    }
 }

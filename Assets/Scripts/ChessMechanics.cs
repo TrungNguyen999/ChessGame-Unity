@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 /*
  This script is for writing all the mechanics of the game (isCaptured(), canCastle(), isCheck(), canEnPassant(), isCheckMate())
@@ -36,6 +38,14 @@ public class ChessMechanics : MonoBehaviour
         if (attack)
         {
             GameObject cp = controller.GetComponent<GameController>().GetPosition(matrixX, matrixY);
+            if (cp.name == "white_king")
+            {
+                controller.GetComponent<GameController>().Winner("black", "white");
+            }
+            if (cp.name == "black_king")
+            {
+                controller.GetComponent<GameController>().Winner("white", "black");
+            }
             Destroy(cp);
         }
         
@@ -47,6 +57,7 @@ public class ChessMechanics : MonoBehaviour
         reference.GetComponent<ChessPieces>().SetCoords();
 
         controller.GetComponent<GameController>().SetPosition(reference);
+        controller.GetComponent<GameController>().NextTurn();
         reference.GetComponent<ChessPieces>().DestroyedMovePlate();
     }
 
